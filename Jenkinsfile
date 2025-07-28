@@ -17,12 +17,10 @@ pipeline {
                 )
             }
         }
-
         stage('DockerImageBuild') {
             steps {
-                script {
-                    dockerImage = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
-                }
+                   sshPublisher(publishers: [sshPublisherDesc(configName: 'vamij5', transfers: [sshTransfer(cleanRemote: false, excludes: '', execCommand: '''ch docker/
+sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'docker', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
 
