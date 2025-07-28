@@ -30,7 +30,7 @@ pipeline {
                                 remoteDirectory: 'docker',
                                 execCommand: """
                                     cd docker &&
-                                    docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                                    sudo docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
                                 """,
                                 execTimeout: 120000
                             )
@@ -41,16 +41,6 @@ pipeline {
                 ])
             }
         }
-
-        stage('Auth to Artifact Registry') {
-            steps {
-                sh '''
-                    gcloud auth activate-service-account --key-file=$SERVICE_ACCOUNT_KEY
-                    gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
-                '''
-            }
-        }
-
         stage('Push to Artifact Registry') {
             steps {
                 sshPublisher(publishers: [
@@ -60,7 +50,7 @@ pipeline {
                             sshTransfer(
                                 sourceFiles: '',
                                 remoteDirectory: 'docker',
-                                execCommand: "docker push ${IMAGE_NAME}:${IMAGE_TAG}",
+                                execCommand: "sudo docker push ${IMAGE_NAME}:${IMAGE_TAG}",
                                 execTimeout: 120000
                             )
                         ],
