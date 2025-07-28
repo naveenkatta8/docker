@@ -31,9 +31,6 @@ sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, f
         '''
     }
 }
-
-        }
-
         stage('Push to Artifact Registry') {
             steps {
                 sh """
@@ -41,5 +38,5 @@ sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, f
                 """
             }
         }
-    }
+    }}
 
