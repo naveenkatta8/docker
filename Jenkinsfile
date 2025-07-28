@@ -33,10 +33,17 @@ sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, f
 }
         stage('Push to Artifact Registry') {
             steps {
-                sh """
-                docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                """
+                sshPublisher(publishers: 
+                [sshPublisherDesc
+                (configName: 'vamij5', transfers: [sshTransfer(cleanRemote: false, 
+                excludes: '', 
+                execCommand: 'sudo docker push ${IMAGE_NAME}:${IMAGE_TAG}', 
+                execTimeout: 120000, flatten: false, makeEmptyDirs: false, 
+                noDefaultExcludes: false, patternSeparator: '[, ]+', 
+                remoteDirectory: 'docker', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '')], 
+                usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
+            }
             }
         }
-    }}
+    }
 
