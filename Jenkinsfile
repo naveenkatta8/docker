@@ -23,15 +23,15 @@ pipeline {
 sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, flatten: false, makeEmptyDirs: false, noDefaultExcludes: false, patternSeparator: '[, ]+', remoteDirectory: 'docker', remoteDirectorySDF: false, removePrefix: '', sourceFiles: '**/*')], usePromotionTimestamp: false, useWorkspaceInPromotion: false, verbose: false)])
             }
         }
-
         stage('Auth to Artifact Registry') {
             steps {
                 sh '''
-                echo $SERVICE_ACCOUNT_KEY >sa-key.json
-                gcloud auth activate-service-account --key-file=sa-key.json
+                gcloud auth activate-service-account --key-file=$SERVICE_ACCOUNT_KEY
                 gcloud auth configure-docker us-central1-docker.pkg.dev --quiet
-                '''
-            }
+        '''
+    }
+}
+
         }
 
         stage('Push to Artifact Registry') {
@@ -41,5 +41,5 @@ sudo docker.build -t ("${IMAGE_NAME}:${IMAGE_TAG}") .''', execTimeout: 120000, f
                 """
             }
         }
-    }}
+    }
 
